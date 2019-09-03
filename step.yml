@@ -71,7 +71,6 @@ inputs:
       is_required: true
       is_expand: true
       is_sensitive: true
-
   - api_token:
     opts:
       title: Jira api token
@@ -80,19 +79,17 @@ inputs:
       is_required: true
       is_expand: true
       is_sensitive: true
-
   - comments:
     opts:
-      title: Jira projects keys
-      summary: Jira projects keys separated with `|`
-      description: Jira project keys separated with `|`
+      title: Jira Comment
+      summary: Jira comment
+      description: Jira comment to post
       is_required: true
-
   - jira_tickets:
     opts:
-      title: Jira Status
-      summary: Jira status separated with `|`
-      description: Jira status separated with `|` as In Develop|In Qa
+      title: Jira Tickets
+      summary: Jira Tickets separated with `|`
+      description: Jira Tickets separated with `|` as SIG-230|SIG-245
       is_required: true
   - version:
     opts:
