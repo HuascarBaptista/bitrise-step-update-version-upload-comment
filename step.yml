@@ -95,11 +95,11 @@ inputs:
       description: Jira status separated with `|` as In Develop|In Qa
       is_required: true
   - version:
-      opts:
-        title: Jira Version to Upload
-        summary: Jira Version to Upload
-        description: Jira Version to Upload this version should exists in Jira
-        is_required: true
+    opts:
+      title: Jira Version to Upload
+      summary: Jira Version to Upload
+      description: Jira Version to Upload this version should exists in Jira
+      is_required: true
   - base_url:
     opts:
       title: Jira base URL.
