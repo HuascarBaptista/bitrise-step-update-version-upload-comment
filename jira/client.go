@@ -108,22 +108,22 @@ type TransitionRequest struct {
 type Add struct {
 	Body string `json:"body"`
 }
-type Set struct {
-	Name string `json:"name"`
-}
 type JsonComment struct {
 	Add Add `json:"add"`
 }
-type JsonLabels struct {
-	label string `json:"add"`
+type Labels struct {
+	Add string `json:"add"`
 }
-type JsonVersion struct {
+type Set struct {
+	Name string `json:"name"`
+}
+type FixVersions struct {
 	Set []Set `json:"set"`
 }
 type Update struct {
-	Comment     []JsonComment `json:"comment"`
-	FixVersions []JsonVersion `json:"fixVersions"`
-	Labels []JsonLabels `json:"labels"`
+	Comment     []JsonComment     `json:"comment"`
+	Labels      []Labels      `json:"labels"`
+	FixVersions []FixVersions `json:"fixVersions"`
 }
 
 func (client *Client) postIssueCommentAndVersionAndLabel(comment Comment, version string, AdditionalLabel string, ch chan response) {
@@ -135,8 +135,8 @@ func (client *Client) postIssueCommentAndVersionAndLabel(comment Comment, versio
 	newFields := &TransitionRequest{
 		Update{
 			Comment:     []JsonComment{{Add{Body: comment.Content}}},
-			FixVersions: []JsonVersion{{Set: []Set{{Name: version}}}},
-			Labels: []JsonLabels{{label: AdditionalLabel}},
+			FixVersions: []FixVersions{{Set: []Set{{Name: version}}}},
+			Labels:      []Labels{{Add: AdditionalLabel}},
 		},
 	}
 	request, err := createRequest(http.MethodPut, requestURL, client.headers, newFields)
