@@ -18,6 +18,7 @@ type Config struct {
 	IssueKeys string `env:"jira_tickets,required"`
 	Message   string `env:"comments,required"`
 	Version   string `env:"version,required"`
+	AdditionalLabel   string `env:"label"`
 }
 
 func main() {
@@ -38,7 +39,7 @@ func main() {
 		comments = append(comments, jira.Comment{Content: cfg.Message, IssuKey: issueKey})
 	}
 
-	if err := client.PostIssueCommentsAndVersion(comments, cfg.Version); err != nil {
+	if err := client.PostIssueCommentsAndVersionAndLabel(comments, cfg.Version, cfg.AdditionalLabel); err != nil {
 		failf("Posting comments failed with error: %s", err)
 	}
 	os.Exit(0)

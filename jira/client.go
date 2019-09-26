@@ -56,8 +56,8 @@ func NewClient(token, baseURL string) *Client {
 	}
 }
 
-// PostIssueCommentsAndVersion ...
-func (client *Client) PostIssueCommentsAndVersion(comments []Comment, version string) error {
+// PostIssueCommentsAndVersionAndLabel ...
+func (client *Client) PostIssueCommentsAndVersionAndLabel(comments []Comment, version string, AdditionalLabel string) error {
 	if len(comments) == 0 {
 		return fmt.Errorf("no comment has been added")
 	}
@@ -68,7 +68,7 @@ func (client *Client) PostIssueCommentsAndVersion(comments []Comment, version st
 
 	ch := make(chan response, len(comments))
 	for _, comment := range comments {
-		go client.postIssueCommentAndVersion(comment, version, ch)
+		go client.postIssueCommentAndVersionAndLabel(comment, version, AdditionalLabel, ch)
 	}
 
 	counter := 0
@@ -102,7 +102,6 @@ func (client *Client) PostIssueCommentsAndVersion(comments []Comment, version st
 
 // -------------------------------------
 // -- Private methods
-
 type TransitionRequest struct {
 	Update Update `json:"update"`
 }
@@ -115,15 +114,19 @@ type Set struct {
 type JsonComment struct {
 	Add Add `json:"add"`
 }
+type JsonLabels struct {
+	label string `json:"add"`
+}
 type JsonVersion struct {
 	Set []Set `json:"set"`
 }
 type Update struct {
 	Comment     []JsonComment `json:"comment"`
 	FixVersions []JsonVersion `json:"fixVersions"`
+	Labels []JsonLabels `json:"labels"`
 }
 
-func (client *Client) postIssueCommentAndVersion(comment Comment, version string, ch chan response) {
+func (client *Client) postIssueCommentAndVersionAndLabel(comment Comment, version string, AdditionalLabel string, ch chan response) {
 	requestURL, err := urlutil.Join(client.baseURL, apiEndPoint, comment.IssuKey)
 	if err != nil {
 		ch <- response{comment.IssuKey, err}
@@ -133,6 +136,7 @@ func (client *Client) postIssueCommentAndVersion(comment Comment, version string
 		Update{
 			Comment:     []JsonComment{{Add{Body: comment.Content}}},
 			FixVersions: []JsonVersion{{Set: []Set{{Name: version}}}},
+			Labels: []JsonLabels{{label: AdditionalLabel}},
 		},
 	}
 	request, err := createRequest(http.MethodPut, requestURL, client.headers, newFields)

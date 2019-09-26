@@ -76,6 +76,12 @@ inputs:
       summary: Jira comment
       description: Jira comment to post
       is_required: true
+  - label:
+    opts:
+      title: Jira Additional label
+      summary: Jira Label
+      description: Jira Label
+      is_required: false
   - jira_tickets:
     opts:
       title: Jira Tickets
