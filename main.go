@@ -12,13 +12,13 @@ import (
 
 // Config ...
 type Config struct {
-	UserName  string `env:"user_name,required"`
-	APIToken  string `env:"api_token,required"`
-	BaseURL   string `env:"base_url,required"`
-	IssueKeys string `env:"jira_tickets"`
-	Message   string `env:"comments,required"`
-	Version   string `env:"version,required"`
-	AdditionalLabel   string `env:"label"`
+	UserName        string `env:"user_name,required"`
+	APIToken        string `env:"api_token,required"`
+	BaseURL         string `env:"base_url,required"`
+	IssueKeys       string `env:"jira_tickets"`
+	Message         string `env:"comments,required"`
+	Version         string `env:"version"`
+	AdditionalLabel string `env:"label"`
 }
 
 func main() {

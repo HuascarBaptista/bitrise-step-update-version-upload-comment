@@ -42,11 +42,11 @@ run_if: ""
 
 deps:
   brew:
-  - name: git
-  - name: wget
+    - name: git
+    - name: wget
   apt_get:
-  - name: git
-  - name: wget
+    - name: git
+    - name: wget
 
 
 toolkit:
@@ -92,7 +92,7 @@ inputs:
       title: Jira Version to Upload
       summary: Jira Version to Upload
       description: Jira Version to Upload this version should exists in Jira
-      is_required: true
+      is_required: false
   - base_url:
     opts:
       title: Jira base URL.

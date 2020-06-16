@@ -62,10 +62,6 @@ func (client *Client) PostIssueCommentsAndVersionAndLabel(comments []Comment, ve
 		return fmt.Errorf("no comment has been added")
 	}
 
-	if len(version) == 0 {
-		return fmt.Errorf("no version has been added")
-	}
-
 	ch := make(chan response, len(comments))
 	for _, comment := range comments {
 		go client.postIssueCommentAndVersionAndLabel(comment, version, AdditionalLabel, ch)
@@ -121,7 +117,7 @@ type FixVersions struct {
 	Set []Set `json:"set"`
 }
 type Update struct {
-	Comment     []JsonComment     `json:"comment"`
+	Comment     []JsonComment `json:"comment"`
 	Labels      []Labels      `json:"labels"`
 	FixVersions []FixVersions `json:"fixVersions"`
 }
@@ -132,13 +128,8 @@ func (client *Client) postIssueCommentAndVersionAndLabel(comment Comment, versio
 		ch <- response{comment.IssuKey, err}
 		return
 	}
-	newFields := &TransitionRequest{
-		Update{
-			Comment:     []JsonComment{{Add{Body: comment.Content}}},
-			FixVersions: []FixVersions{{Set: []Set{{Name: version}}}},
-			Labels:      []Labels{{Add: AdditionalLabel}},
-		},
-	}
+	newFields := client.getNewFields(comment, version, AdditionalLabel)
+
 	request, err := createRequest(http.MethodPut, requestURL, client.headers, newFields)
 	if err != nil {
 		ch <- response{comment.IssuKey, err}
@@ -156,6 +147,42 @@ func (client *Client) postIssueCommentAndVersionAndLabel(comment Comment, versio
 	_, body, err := client.performRequest(request, nil)
 	log.Debugf("Body: %s", string(body))
 	ch <- response{comment.IssuKey, err}
+}
+
+func (client *Client) getNewFields(comment Comment, version string, AdditionalLabel string) *TransitionRequest {
+	if len(version) == 0 {
+		if len(AdditionalLabel) == 0 {
+			return &TransitionRequest{
+				Update{
+					Comment: []JsonComment{{Add{Body: comment.Content}}},
+				},
+			}
+		} else {
+			return &TransitionRequest{
+				Update{
+					Comment: []JsonComment{{Add{Body: comment.Content}}},
+					Labels:  []Labels{{Add: AdditionalLabel}},
+				},
+			}
+		}
+	} else {
+		if len(AdditionalLabel) == 0 {
+			return &TransitionRequest{
+				Update{
+					Comment:     []JsonComment{{Add{Body: comment.Content}}},
+					FixVersions: []FixVersions{{Set: []Set{{Name: version}}}},
+				},
+			}
+		} else {
+			return &TransitionRequest{
+				Update{
+					Comment:     []JsonComment{{Add{Body: comment.Content}}},
+					FixVersions: []FixVersions{{Set: []Set{{Name: version}}}},
+					Labels:      []Labels{{Add: AdditionalLabel}},
+				},
+			}
+		}
+	}
 }
 
 func createRequest(requestMethod string, url string, headers map[string]string, fields *TransitionRequest) (*http.Request, error) {
