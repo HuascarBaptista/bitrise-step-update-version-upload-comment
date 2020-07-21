@@ -107,14 +107,8 @@ type Add struct {
 type JsonComment struct {
 	Add Add `json:"add"`
 }
-type Labels struct {
-	Add string `json:"add"`
-}
 type Set struct {
 	Name string `json:"name"`
-}
-type FixVersions struct {
-	Set []Set `json:"set"`
 }
 type Update struct {
 	Comment []JsonComment `json:"comment"`
