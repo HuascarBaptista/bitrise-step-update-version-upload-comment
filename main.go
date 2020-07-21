@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/HuascarBaptista/bitrise-step-update-version-upload-comment/jira"
+	"github.com/HuascarBaptista/bitrise-step-upload-comment/jira"
 	"github.com/bitrise-io/go-utils/log"
 	"github.com/bitrise-tools/go-steputils/stepconf"
 	"os"
@@ -12,13 +12,11 @@ import (
 
 // Config ...
 type Config struct {
-	UserName        string `env:"user_name,required"`
-	APIToken        string `env:"api_token,required"`
-	BaseURL         string `env:"base_url,required"`
-	IssueKeys       string `env:"jira_tickets"`
-	Message         string `env:"comments,required"`
-	Version         string `env:"version"`
-	AdditionalLabel string `env:"label"`
+	UserName  string `env:"user_name,required"`
+	APIToken  string `env:"api_token,required"`
+	BaseURL   string `env:"base_url,required"`
+	IssueKeys string `env:"jira_tickets"`
+	Message   string `env:"comments,required"`
 }
 
 func main() {
@@ -43,7 +41,7 @@ func main() {
 		comments = append(comments, jira.Comment{Content: cfg.Message, IssuKey: issueKey})
 	}
 
-	if err := client.PostIssueCommentsAndVersionAndLabel(comments, cfg.Version, cfg.AdditionalLabel); err != nil {
+	if err := client.PostIssueComments(comments); err != nil {
 		failf("Posting comments failed with error: %s", err)
 	}
 	os.Exit(0)

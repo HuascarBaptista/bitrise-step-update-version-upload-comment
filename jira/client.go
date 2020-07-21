@@ -56,15 +56,15 @@ func NewClient(token, baseURL string) *Client {
 	}
 }
 
-// PostIssueCommentsAndVersionAndLabel ...
-func (client *Client) PostIssueCommentsAndVersionAndLabel(comments []Comment, version string, AdditionalLabel string) error {
+// PostIssueComments ...
+func (client *Client) PostIssueComments(comments []Comment) error {
 	if len(comments) == 0 {
 		return fmt.Errorf("no comment has been added")
 	}
 
 	ch := make(chan response, len(comments))
 	for _, comment := range comments {
-		go client.postIssueCommentAndVersionAndLabel(comment, version, AdditionalLabel, ch)
+		go client.postTicketComment(comment, ch)
 	}
 
 	counter := 0
@@ -120,7 +120,7 @@ type Update struct {
 	Comment []JsonComment `json:"comment"`
 }
 
-func (client *Client) postIssueCommentAndVersionAndLabel(comment Comment, version string, AdditionalLabel string, ch chan response) {
+func (client *Client) postTicketComment(comment Comment, ch chan response) {
 	requestURL, err := urlutil.Join(client.baseURL, apiEndPoint, comment.IssuKey)
 	if err != nil {
 		ch <- response{comment.IssuKey, err}

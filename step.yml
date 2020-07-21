@@ -1,12 +1,12 @@
 title: |-
-  Bitrise Update Version and Add Comment
+  Bitrise Jira Add Comment
 summary: |
-  Jira update fix version and upload a comment
+  Bitrise Jira Add Comment
 description: |
-  Jira update fix version and upload a comment
-website: https://github.com/HuascarBaptista/bitrise-step-update-version-upload-comment
-source_code_url: https://github.com/HuascarBaptista/bitrise-step-update-version-upload-comment
-support_url: https://github.com/HuascarBaptista/bitrise-step-update-version-upload-comment/issues
+  Bitrise Jira Add Comment
+website: https://github.com/HuascarBaptista/bitrise-step-upload-comment
+source_code_url: https://github.com/HuascarBaptista/bitrise-step-upload-comment
+support_url: https://github.com/HuascarBaptista/bitrise-step-upload-comment/issues
 host_os_tags:
   - osx-10.10
   - ubuntu-16.04
@@ -51,7 +51,7 @@ deps:
 
 toolkit:
   go:
-    package_name: github.com/HuascarBaptista/bitrise-step-update-version-upload-comment
+    package_name: github.com/HuascarBaptista/bitrise-step-upload-comment
 
 inputs:
   - user_name:
@@ -76,23 +76,11 @@ inputs:
       summary: Jira comment
       description: Jira comment to post
       is_required: true
-  - label:
-    opts:
-      title: Jira Additional label
-      summary: Jira Label
-      description: Jira Label
-      is_required: false
   - jira_tickets:
     opts:
       title: Jira Tickets
       summary: Jira Tickets separated with `|`
       description: Jira Tickets separated with `|` as SIG-230|SIG-245
-  - version:
-    opts:
-      title: Jira Version to Upload
-      summary: Jira Version to Upload
-      description: Jira Version to Upload this version should exists in Jira
-      is_required: false
   - base_url:
     opts:
       title: Jira base URL.
